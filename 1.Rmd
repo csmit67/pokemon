@@ -1,0 +1,66 @@
+---
+title: "Lab 12" 
+author: "Cassie Smith"
+Date: Sys. date()
+output: flexdashboard::flex_dashboard 
+---
+```{r setup, include = FALSE}
+library(tidyverse)
+library(plotly)
+library(crosstalk)
+pokemon <- read.csv("pokemon.csv")
+shared_pokemon <- SharedData$new(pokemon)
+```
+
+Column
+-------------------------------------
+
+###  BoxPlot for Distribution of Pokemon
+
+```{r}
+dist <- shared_pokemon %>%
+  ggplot() +
+ theme(axis.text.x = element_text(angle = 45)) +
+  geom_boxplot(mapping = aes(x = reorder(Type.1, Total, FUN=median), 
+                             y = Total, fill = Type.1)) +
+  labs(title= "distribution of total Pokemon", x= "Type", y= "Total")
+
+ggplotly(dist)
+  
+```
+
+Column
+-------------------------------------
+
+### Defense Vs Attack, based off of main Pokemon Type
+
+```{r}
+p <- shared_pokemon %>%
+  ggplot() +
+ theme(axis.text.x = element_text(angle = 45)) +
+  geom_point(mapping = aes(x = Defense, y = Attack, color = Type.1)) +
+  labs(title= "Defense vs Attack", x= "Defense", y= "Attack")
+  
+  ggplotly(p)
+```
+
+Column
+-------------------------------------
+
+### SP Def vs SP atk
+```{r}
+spatk<- shared_pokemon %>%
+  ggplot() +
+ theme(axis.text.x = element_text(angle = 45)) +
+  geom_point(mapping = aes(x = Sp..Def, y = Sp..Atk, color = Type.1)) +
+  geom_text(aes(x= Sp..Def, y=Sp..Atk, label = Name, text = paste("Name:", Name)), hjust = 1, vjust = 1, size = 3, alpha=0) +
+  labs(title= "Defense vs Attack", x= "Defense", y= "Attack")
+
+ggplotly(spatk, tooltip =  "text")
+```
+  
+SidebarName {.sidebar}
+----------------------
+```{r}
+filter_select("poke_type", "Pokemon Type", shared_pokemon, ~Type.1)
+```
