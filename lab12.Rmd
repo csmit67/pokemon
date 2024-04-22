@@ -53,14 +53,16 @@ spatk<- shared_pokemon %>%
   ggplot() +
  theme(axis.text.x = element_text(angle = 45)) +
   geom_point(mapping = aes(x = Sp..Def, y = Sp..Atk, color = Type.1)) +
-  geom_text(aes(x= Sp..Def, y=Sp..Atk, label = Name, text = paste("Name:", Name)), hjust = 1, vjust = 1, size = 3, alpha=0) +
   labs(title= "Defense vs Attack", x= "Defense", y= "Attack")
 
-ggplotly(spatk, tooltip =  "text")
+ggplotly(spatk)
 ```
   
 SidebarName {.sidebar}
 ----------------------
 ```{r}
 filter_select("poke_type", "Pokemon Type", shared_pokemon, ~Type.1)
+```
+```{r}
+filter_select("Name", "Pokemon Name", shared_pokemon, ~Name)
 ```
